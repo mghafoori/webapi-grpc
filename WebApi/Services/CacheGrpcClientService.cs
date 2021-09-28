@@ -1,8 +1,11 @@
 ﻿using Grpc.Net.Client;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 using WebApi.Clients;
 using WebApi.Model;
+using WebApi.Options;
 using static WebApi.Clients.CacheServiceProvider;
 
 namespace WebApi.Services
@@ -13,9 +16,9 @@ namespace WebApi.Services
         private readonly CacheServiceProviderClient _client;
         private readonly ILogger<CacheGrpcClientService> _logger;
 
-        public CacheGrpcClientService(ILogger<CacheGrpcClientService> logger)
+        public CacheGrpcClientService(ILogger<CacheGrpcClientService> logger, IOptions<GrpcOptions> options)
         {
-            var grpcChannel = GrpcChannel.ForAddress("http://localhost:5000");
+            var grpcChannel = GrpcChannel.ForAddress(options.Value.Address);
             _client = new CacheServiceProviderClient(grpcChannel);
             _logger = logger;
         }
